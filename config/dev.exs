@@ -52,7 +52,8 @@ config :cuyhooks, CuyhooksWeb.Endpoint,
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/cuyhooks_web/{live,views}/.*(ex)$",
-      ~r"lib/cuyhooks_web/templates/.*(eex)$"
+      ~r"lib/cuyhooks_web/templates/.*(eex)$",
+      ~r"lib/cuyhooks_web/live/.*(ex)$"
     ]
   ]
 
