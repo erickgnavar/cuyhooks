@@ -2,4 +2,5 @@
   <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
   <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
 </section>
-<%= live_render(@conn, CuyhooksWeb.WebhookLive) %>
+
+<%= link "Create webhook live", to: Routes.webhook_path(@conn, :create), method: "post", class: "button" %>

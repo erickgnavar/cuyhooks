@@ -2,11 +2,12 @@ defmodule CuyhooksWeb.WebhookLive do
   use Phoenix.LiveView
   alias CuyhooksWeb.Endpoint
 
-  @topic "webhooks"
+  @base_topic "webhooks"
 
-  def mount(_session, socket) do
-    Endpoint.subscribe(@topic)
-    {:ok, assign(socket, request: nil)}
+  def mount(session, socket) do
+    key = Map.get(session, "key")
+    Endpoint.subscribe(@base_topic <> ":#{key}")
+    {:ok, assign(socket, request: nil, key: key)}
   end
 
   def render(assigns) do
@@ -51,8 +52,12 @@ defmodule CuyhooksWeb.WebhookLive do
   end
 
   @spec handle_info(Phoenix.Socket.Broadcast.t(), map) :: {:noreply, map}
-  def handle_info(%{topic: @topic, event: "new_request", payload: payload}, socket) do
-    {:noreply, assign(socket, request: payload)}
+  def handle_info(%{topic: topic, event: "new_request", payload: payload}, socket) do
+    if topic == "#{@base_topic}:#{socket.assigns.key}" do
+      {:noreply, assign(socket, request: payload)}
+    else
+      {:noreply, socket}
+    end
   end
 
   defp to_json(value), do: Jason.encode!(value)

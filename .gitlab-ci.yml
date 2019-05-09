@@ -9,7 +9,7 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   MIX_ENV: test
-  SECRET_KEY: secret
+  SECRET_KEY: Jb0gXUV1+JrmUPB8EsVO2jrGrth8M/2NMWpgn6GpMRLcZ8eY1nOEcovenF5g8Xgt
 
 stages:
   - lint

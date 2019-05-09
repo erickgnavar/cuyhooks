@@ -18,10 +18,12 @@ defmodule CuyhooksWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/webhook/create", WebhookController, :create
+    get "/webhook/:key/live", WebhookController, :live
   end
 
-  post "/webhook", CuyhooksWeb.WebhookController, :index
-  get "/webhook", CuyhooksWeb.WebhookController, :index
+  post "/webhook/:key", CuyhooksWeb.WebhookController, :index
+  get "/webhook/:key", CuyhooksWeb.WebhookController, :index
 
   # Other scopes may use custom stacks.
   # scope "/api", CuyhooksWeb do
