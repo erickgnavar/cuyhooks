@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  db:
+    restart: unless-stopped
+    image: postgres:10.0
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  web:
+    restart: unless-stopped
+    depends_on:
+      - db
+    build: .
+    environment:
+      - PORT=80
+      - DOMAIN=localhost
+      - MIX_ENV=prod
+      - SECRET_KEY=UIiuORCDsYLMR7Nfn08PdBaChpwOavjHN8LEJebIJXTGIHIQZZelEEc0vuS0WKP0
+      - DATABASE_URL=ecto://postgres:postgres@db/postgres
+    links:
+      - db
+    ports:
+      - "4000:80"
+    command: "mix phx.server"

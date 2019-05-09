@@ -1,8 +1,15 @@
 image: elixir:1.8
 
+.before_script_template: &before_script_elixir
+  before_script:
+    - mix local.hex --force
+    - mix local.rebar --force
+    - mix deps.get --only test
+
 services:
   - name: postgres:10.0
     alias: localhost
+  - docker:dind
 
 variables:
   POSTGRES_DB: cuyhooks_test
@@ -14,17 +21,26 @@ variables:
 stages:
   - lint
   - test
-
-before_script:
-  - mix local.hex --force
-  - mix local.rebar --force
-  - mix deps.get --only test
+  - build
 
 lint:
+  stage: lint
+  <<: *before_script_elixir
   script:
     - mix format --check-formatted
 
 test:
   stage: test
+  <<: *before_script_elixir
   script:
     - mix test
+
+docker_build:
+  stage: build
+  image: docker:latest
+  only:
+    - master
+  script:
+    - docker build . -t "$DOCKER_USERNAME/$CI_PROJECT_NAME:alpha"
+    - cat $DOCKER_PASSWORD | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push "$DOCKER_USERNAME/$CI_PROJECT_NAME:alpha"
