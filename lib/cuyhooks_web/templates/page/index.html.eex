@@ -1,6 +1,5 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
-</section>
+<p>
+  Create a webhook url to receive requests and see their details in realtime.
+</p>
 
 <%= link "Create webhook live", to: Routes.webhook_path(@conn, :create), method: "post", class: "button" %>
