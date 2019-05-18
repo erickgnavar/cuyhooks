@@ -1,0 +1,79 @@
+<%= unless is_nil(@request) do %>
+<div class="row">
+  <div class="column">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Host:</td>
+          <td><%= @request.host %></td>
+        </tr>
+        <tr>
+          <td>Method:</td>
+          <td><%= @request.method %></td>
+        </tr>
+        <tr>
+          <td>Querystring:</td>
+          <td><%= @request.querystring %></td>
+        </tr>
+        <tr>
+          <td>Date:</td>
+          <td><%= @request.inserted_at %></td>
+        </tr>
+        <tr>
+          <td>ID:</td>
+          <td><%= @request.uid %></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="column column-60">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Headers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for {key, value} <- @request.headers do %>
+        <tr>
+          <td><%= key %></td>
+          <td>
+            <code>
+            <%= value %>
+            </code>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <table>
+      <thead>
+        <tr>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code>
+              <%= to_json(@request.body) %>
+            </code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% else %>
+Waiting for a request...
+<% end %>

@@ -1,20 +1,24 @@
 defmodule CuyhooksWeb.WebhookController do
   use CuyhooksWeb, :controller
   alias CuyhooksWeb.Endpoint
+  alias Cuyhooks.Requests
 
-  import Phoenix.LiveView.Controller
-
-  def index(conn, params = %{"key" => key}) do
-    payload = %{
-      headers: conn.req_headers,
-      query_string: conn.query_string,
-      method: conn.method,
-      host: conn.host,
-      body: Map.drop(params, ["key"])
+  def index(conn, _params = %{"key" => key}) do
+    data = %{
+      "headers" => Map.new(conn.req_headers),
+      "querystring" => conn.query_string,
+      "method" => conn.method,
+      "host" => conn.host,
+      "body" => "",
+      "hook" => key
     }
 
+    # TODO: add request body to request creation
+
+    {:ok, request} = Requests.create_request(data)
+
     topic = "webhooks:#{key}"
-    Endpoint.broadcast(topic, "new_request", payload)
+    Endpoint.broadcast(topic, "new_request", request)
     text(conn, "ok")
   end
 
@@ -24,6 +28,8 @@ defmodule CuyhooksWeb.WebhookController do
   end
 
   def live(conn, %{"key" => key}) do
-    live_render(conn, CuyhooksWeb.WebhookLive, session: %{"key" => key})
+    requests = Requests.list_requests_by_hook(key)
+    requests_quantity = length(requests)
+    render(conn, "live.html", key: key, requests: requests, requests_quantity: requests_quantity)
   end
 end

@@ -8,7 +8,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{ex,exs,ini,yml,json}]
+[*.{ex,exs,ini,yml,json,eex,leex}]
 indent_style = space
 indent_size = 2
 

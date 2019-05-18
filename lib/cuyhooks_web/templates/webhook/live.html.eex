@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="column">
+    REQUESTS (<%= @requests_quantity %>)
+    <ul>
+    <%= for request <- @requests do %>
+      <li>
+        <%= request.method %> <%= request.uid %> <br/>
+        <%= request.inserted_at %>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  <div class="column column-75">
+    <div class="row">
+      <div class="column">
+        Try it
+        <code id="curl-command">
+          curl <%= add_host_to_url(@conn, Routes.webhook_path(@conn, :index, @key)) %>
+        </code>
+        <button type="button" onclick="copyCurlCommand(this)">Copy</button>
+        <span id="copy-success-message" style="display: none">copied</span>
+      </div>
+    </div>
+    <%= live_render(@conn, CuyhooksWeb.WebhookLive, session: %{"key" => @key}) %>
+  </div>
+</div>
+<script>
+  function copyCurlCommand(event) {
+    let elem = document.createElement("input");
+    let displayMessage = document.querySelector("#copy-success-message");
+
+    document.body.appendChild(elem);
+    elem.value = document.querySelector("#curl-command").textContent.trim();
+    elem.select();
+    document.execCommand("copy");
+    document.body.removeChild(elem);
+    displayMessage.style.display = "block";
+
+    setTimeout(function () {
+      displayMessage.style.display = "none";
+    }, 2000);
+  }
+</script>

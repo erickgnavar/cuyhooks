@@ -11,44 +11,7 @@ defmodule CuyhooksWeb.WebhookLive do
   end
 
   def render(assigns) do
-    ~L"""
-    <%= unless is_nil(@request) do %>
-      <h3>Info</h3>
-
-      <table>
-        <tr>
-          <td>Host:</td>
-          <td><%= @request.host %></td>
-        </tr>
-        <tr>
-          <td>Method:</td>
-          <td><%= @request.method %></td>
-        </tr>
-        <tr>
-          <td>Querystring:</td>
-          <td><%= @request.query_string %></td>
-        </tr>
-      </table>
-
-      <h3>Headers</h3>
-
-      <table>
-        <%= for {key, value} <- @request.headers do %>
-        <tr>
-          <td><%= key %></td>
-          <td><%= value %></td>
-        </tr>
-        <% end %>
-      </table>
-
-      <h3>Body</h3>
-      <code>
-      <%= to_json(@request.body) %>
-      </code>
-    <% else %>
-      Waiting for a request...
-    <% end %>
-    """
+    CuyhooksWeb.WebhookView.render("request_live.html", assigns)
   end
 
   @spec handle_info(Phoenix.Socket.Broadcast.t(), map) :: {:noreply, map}
@@ -59,6 +22,4 @@ defmodule CuyhooksWeb.WebhookLive do
       {:noreply, socket}
     end
   end
-
-  defp to_json(value), do: Jason.encode!(value)
 end
