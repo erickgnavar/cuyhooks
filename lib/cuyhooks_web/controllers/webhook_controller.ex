@@ -4,16 +4,17 @@ defmodule CuyhooksWeb.WebhookController do
   alias Cuyhooks.Requests
 
   def index(conn, _params = %{"key" => key}) do
+    {:ok, body, _} = read_body(conn)
+    # TODO: find a way to disable the parsers only for this controller
+
     data = %{
       "headers" => Map.new(conn.req_headers),
       "querystring" => conn.query_string,
       "method" => conn.method,
       "host" => conn.host,
-      "body" => "",
+      "body" => body,
       "hook" => key
     }
-
-    # TODO: add request body to request creation
 
     {:ok, request} = Requests.create_request(data)
 
