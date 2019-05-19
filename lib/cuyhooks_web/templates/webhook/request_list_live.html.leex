@@ -1,0 +1,14 @@
+REQUESTS (<%= length(@requests) %>)
+<ul>
+  <%= for request <- @requests do %>
+  <li>
+    <%= request.method %> <%= request.inserted_at %> <br/>
+    <form phx-submit="set-request">
+      <input name="request-uid" type="hidden" value="<%= request.uid %>"/>
+      <button>
+        <%= request.uid %>
+      </button>
+    </form>
+  </li>
+  <% end %>
+</ul>

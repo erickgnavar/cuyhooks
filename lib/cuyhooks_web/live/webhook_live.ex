@@ -1,6 +1,7 @@
 defmodule CuyhooksWeb.WebhookLive do
   use Phoenix.LiveView
   alias CuyhooksWeb.Endpoint
+  alias Cuyhooks.Requests
 
   @base_topic "webhooks"
 
@@ -18,6 +19,16 @@ defmodule CuyhooksWeb.WebhookLive do
   def handle_info(%{topic: topic, event: "new_request", payload: payload}, socket) do
     if topic == "#{@base_topic}:#{socket.assigns.key}" do
       {:noreply, assign(socket, request: payload)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  @spec handle_info(Phoenix.Socket.Broadcast.t(), map) :: {:noreply, map}
+  def handle_info(%{topic: topic, event: "set_request", payload: %{"request_uid" => uid}}, socket) do
+    if topic == "#{@base_topic}:#{socket.assigns.key}" do
+      request = Requests.get_request_by_uid(uid)
+      {:noreply, assign(socket, request: request)}
     else
       {:noreply, socket}
     end

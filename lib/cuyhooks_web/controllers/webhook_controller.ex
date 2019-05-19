@@ -28,8 +28,6 @@ defmodule CuyhooksWeb.WebhookController do
   end
 
   def live(conn, %{"key" => key}) do
-    requests = Requests.list_requests_by_hook(key)
-    requests_quantity = length(requests)
-    render(conn, "live.html", key: key, requests: requests, requests_quantity: requests_quantity)
+    render(conn, "live.html", key: key)
   end
 end

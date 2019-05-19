@@ -47,6 +47,16 @@ defmodule Cuyhooks.Requests do
   """
   def get_request!(id), do: Repo.get!(Request, id)
 
+  def get_request_by_uid(uid) do
+    case Ecto.UUID.cast(uid) do
+      {:ok, ^uid} ->
+        Repo.get_by(Request, uid: uid)
+
+      :error ->
+        nil
+    end
+  end
+
   @doc """
   Creates a request.
 
