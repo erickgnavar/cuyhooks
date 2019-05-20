@@ -28,6 +28,8 @@ defmodule CuyhooksWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Logger
 
+  plug CuyhooksWeb.Plugs.CopyReqBody
+
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
