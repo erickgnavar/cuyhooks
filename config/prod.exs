@@ -10,13 +10,21 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :cuyhooks, CuyhooksWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: System.get_env("DOMAIN")],
+  http: [:inet6, port: "${PORT}"],
+  url: [host: "${DOMAIN}"],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  server: true,
+  root: ".",
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
+
+config :cuyhooks, Cuyhooks.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: "${DATABASE_URL}",
+  pool_size: 20,
+  ssl: false
 
 # ## SSL Support
 #
