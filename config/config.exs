@@ -13,7 +13,6 @@ config :cuyhooks,
 # Configures the endpoint
 config :cuyhooks, CuyhooksWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: System.get_env("SECRET_KEY"),
   render_errors: [view: CuyhooksWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Cuyhooks.PubSub, adapter: Phoenix.PubSub.PG2]
 

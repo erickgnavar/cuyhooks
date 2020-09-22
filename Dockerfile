@@ -1,34 +1,41 @@
-FROM elixir:1.8 as prebuild
-
-COPY . /app
-WORKDIR /app
+FROM elixir:1.9-alpine as build
 
 ENV MIX_ENV=prod
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get --only prod
+# install build dependencies
+RUN apk --update add nodejs npm git build-base
 
-FROM node:11-slim as assets
-
-COPY . /app
-WORKDIR /app/assets
-
-COPY --from=prebuild /app/deps /app/deps
-
-RUN npm install && ./node_modules/.bin/webpack --mode production
-
-FROM elixir:1.8
-
-COPY . /app
 WORKDIR /app
 
-ENV MIX_ENV=prod
+# setup hex + rebar
+RUN mix local.hex --force && mix local.rebar --force
 
-COPY --from=assets /app/priv/static /app/priv/static
+# install mix dependencies
+COPY mix.exs .
+COPY mix.lock .
+COPY config config
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get --only prod
-RUN mix compile
+RUN mix do deps.get --only=prod, compile
+
+# build assets
+COPY assets assets
+COPY priv priv
+
+RUN cd assets && npm install && npm run deploy
 RUN mix phx.digest
+
+# build project
+COPY lib lib
+RUN mix compile
+
+RUN mix release
+
+FROM alpine:3.9
+
+RUN apk add --update bash openssl
+
+WORKDIR /rel
+
+COPY --from=build /app/_build/prod/rel/ .
+
+CMD /rel/cuyhooks/bin/cuyhooks start

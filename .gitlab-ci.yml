@@ -1,4 +1,4 @@
-image: elixir:1.8
+image: elixir:1.9
 
 .before_script_template: &before_script_elixir
   before_script:
@@ -16,7 +16,7 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   MIX_ENV: test
-  SECRET_KEY: Jb0gXUV1+JrmUPB8EsVO2jrGrth8M/2NMWpgn6GpMRLcZ8eY1nOEcovenF5g8Xgt
+  SECRET_KEY_BASE: Jb0gXUV1+JrmUPB8EsVO2jrGrth8M/2NMWpgn6GpMRLcZ8eY1nOEcovenF5g8Xgt
 
 stages:
   - lint
