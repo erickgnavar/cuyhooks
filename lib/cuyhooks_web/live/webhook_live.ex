@@ -5,8 +5,7 @@ defmodule CuyhooksWeb.WebhookLive do
 
   @base_topic "webhooks"
 
-  def mount(session, socket) do
-    key = Map.get(session, "key")
+  def mount(_params, %{"key" => key}, socket) do
     Endpoint.subscribe(@base_topic <> ":#{key}")
     {:ok, assign(socket, request: nil, key: key)}
   end
